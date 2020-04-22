@@ -28,14 +28,17 @@ import json
 import logging
 import threading
 
-gen_event = threading.Event()
-ready_event = threading.Event()
-serviceflag = threading.Event()
 logger = logging.getLogger()
 ttsplayer = WavePlayer()
 mediaplayer = VlcMediaPlayer()
 mediaplayer.start()
 time.sleep(0.5)
+
+serviceflag = threading.Event()
+"""To handle command one at a time"""
+gen_event = threading.Event()
+"""To check request event. If request is handle, gen_event wait to be 1."""
+ready_event = threading.Event()
 ttsplayStatus = 0
 
 message = gigagenieM_pb2.reqM()
@@ -44,40 +47,12 @@ g_msgPayload = ''
 dev_dssStatus = {'SU:016', 'SU:027', 'SI:002', 'SG:000'} # initial status: laucher main, hdmi connected, remote voice input, nobody here
 sendVoiceFlag = False
 
-g_stt_text = ''
-g_tts_text = ''
-
-
-def get_sendVoiceFlag():
-    return sendVoiceFlag
-
-
-def get_stt_text():
-    return g_stt_text
-
-
-def get_tts_text():
-    return g_tts_text
-
-
-def get_media_metainfo():
-    try:
-        return mediaplayer.get_metainfo()
-    except:
-        return None
-
 
 def mic_off_ready():
     global sendVoiceFlag
     sendVoiceFlag = False
     gen_event.clear()
     ready_event.set()
-
-
-def mic_off():
-    global sendVoiceFlag
-    sendVoiceFlag = False
-    gen_event.clear()
 
 
 def mic_on():
@@ -151,7 +126,6 @@ def processMediaPlay(msgPayloadJson):
         Json data from grpc response.
     """
     global ttsplayStatus
-    global g_tts_text
 
     playOptions = msgPayloadJson['cmdOpt']
     dss_state_update(playOptions)
@@ -159,7 +133,6 @@ def processMediaPlay(msgPayloadJson):
     playUrl = playOptions.get('url') 
     meta_info = playOptions['metaInfo'] 
     tts_text = meta_info.get('mesg', '')
-    g_tts_text = tts_text
     logger.info('TTS_TEXT: %s' % tts_text)
     print('TTS_TEXT: %s' % tts_text)
     if playUrl == None:  # media(tts) type is audio data(wave)
@@ -219,7 +192,6 @@ def dss_state_update(option):
     ----------
     option: :obj: `dict`
         dssStatus data
-#TODO
     """
     global dev_dssStatus
     if 'setDssStatus' in option:
@@ -286,7 +258,6 @@ def _generate_request():
                 message.devCommand.msgPayload = g_msgPayload
             logger.debug(g_msgType + ' : ' + message.devCommand.msgPayload)
             yield message
-            logger.debug(g_msgType + ' : ' + message.devCommand.msgPayload)
             gen_event.clear()
 # ---------------------------------- #
 
@@ -299,7 +270,6 @@ def processNextCmd(msgPayloadJson):
     ----------
     msgPayloadJson: :obj:`json`
     """
-    global sendVoiceFlag
     nextCmd = msgPayloadJson['nextCmd'] if 'nextCmd' in msgPayloadJson else ''
     nextCmdOpt = msgPayloadJson['nextCmdOpt'] if 'nextCmdOpt' in msgPayloadJson else ''
 
@@ -330,7 +300,6 @@ def grpc_request():
     """
     global sendVoiceFlag
     global ttsplayStatus
-    global g_stt_text
     
     logger.info("START: grpc_request()")
     stub = grpc_channel.grpc_conn()
@@ -364,7 +333,6 @@ def grpc_request():
                         stt_text = ''
                 else:
                     stt_text = ''
-                g_stt_text = stt_text
                 logger.info('STT_TEXT: %s' % stt_text)
                 print('STT_TEXT: %s' % stt_text)
                 processNextCmd(mPayloadJson)
@@ -445,10 +413,7 @@ def command(request_text=''):
     ----------
     request_text: str
     """
-    global ttsplayStatus
     global sendVoiceFlag
-    global g_stt_text
-    global g_tts_text
     if not grpcThread.is_alive():
         start_grpc_thread()
     # gRPC connection & reqeust-ready
@@ -462,12 +427,9 @@ def command(request_text=''):
         return
     logger.info("ACTION >>> START COMMAND")
     if ttsplayStatus == 2:
-        # TODO: stop tts play
-        # ttsplayer.stop()
         print("Please command after TTS...")
     change_media_process("pause")
 
-    g_stt_text = g_tts_text = ''
     if request_text == "":
         msgType = 'Req_VOCM'
         msgPayload = json.dumps({'cmdOpt': {}, 'dssStatus': list(dev_dssStatus)})
