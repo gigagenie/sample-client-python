@@ -17,7 +17,7 @@ from proto import gigagenieM_pb2_grpc
 import datetime
 import hmac
 import hashlib
-from agent._config import *
+from ._config import *
 import grpc
 
 # Config for GiGA Genie gRPC : config.read('agent.config')
