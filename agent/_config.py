@@ -13,6 +13,8 @@
 # limitations under the License.
 
 """ read config file: agent.config """
+import os
+import sys
 
 try:
     # Python 3.x
@@ -21,4 +23,5 @@ except ImportError:
     # Python 2.x
     from ConfigParser import SafeConfigParser as ConfigParser
 config = ConfigParser()
-config.read('agent.config')
+config_path = os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'agent.config'))
+config.read(config_path)
