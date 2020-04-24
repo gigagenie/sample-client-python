@@ -131,10 +131,11 @@ def processMediaPlay(msgPayloadJson):
     dss_state_update(playOptions)
 
     playUrl = playOptions.get('url') 
-    meta_info = playOptions['metaInfo'] 
-    tts_text = meta_info.get('mesg', '')
-    logger.info('TTS_TEXT: %s' % tts_text)
-    print('TTS_TEXT: %s' % tts_text)
+    meta_info = playOptions.get('metaInfo', None)
+    if meta_info:
+        tts_text = meta_info.get('mesg', '')
+        logger.info('TTS_TEXT: %s' % tts_text)
+        print('TTS_TEXT: %s' % tts_text)
     if playUrl == None:  # media(tts) type is audio data(wave)
         change_media_process(playOptions['actOnOther'])
         logger.info('ACTION >>> TTS Play')
