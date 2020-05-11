@@ -18,15 +18,15 @@ Sample Client에 구현되어있는 기능은 다음과 같습니다.
     * ServiceM RPC command 일부 지원
         >해당 command는 Cloud AI Platform에서 제공하는 API로 G-API 스펙은 별도 공간을 통해 오픈 예정입니다.
 
-다른 언어의 샘플은 https://github.com/gigagenie에서 확인할 수 있습니다.
+다른 언어의 샘플은 https://github.com/gigagenie 에서 확인할 수 있습니다.
 
 
 ## 배포 패키지 구성
 
 * README.md: this file
-* agent.config: 본 배포판 실행을 위한 서버와 키 정보
+* agent.config: 본 배포판 실행을 위한 서버와 키 정보(키 발급 후 수정 필요)
 * requirements.txt: 본 배포판에서 사용되는 Python 라이브러리
-* **run_enter.py**: 본 배포판을 실행하는 메인 파일으로, agent/regist.py와 agent/service.py를 호출합니다.
+* **run_enter.py**: 본 배포판을 실행하는 메인 파일으로, agent/regist.py와 agent/service.py를 호출
 * proto/: grpc proto 파일
 * agent/: Client 구현을 위해 필요한 라이브러리 및 모듈
     * _audio.py: 마이크 기능 및 pyaudio 라이브러리를 이용한 오디오 출력 모듈

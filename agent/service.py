@@ -111,7 +111,6 @@ def change_media_process(act):
         logger.info('ACTION >>> Media Stop')
         #dss_state_update(option):
         mediaplayer.stop()
-    logger.debug(mediaplayer.get_state())
 
 
 def processMediaPlay(msgPayloadJson):
