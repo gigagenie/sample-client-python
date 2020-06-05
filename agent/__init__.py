@@ -25,6 +25,7 @@ VERSION = tuple(map(int, __version__.split('.')))
 
 from .service import *
 from .regist import *
+from .logout import *
 from ._authorize import *
 from .grpc_channel import *
 
