@@ -14,6 +14,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+
 """Simple Client for GiGA Genie Inside"""
 
 from __future__ import print_function
@@ -36,10 +37,11 @@ logging.basicConfig(
     level=logging.DEBUG,
     format="[%(asctime)s](%(filename)s:%(lineno)s)::%(levelname)s:%(message)s"
 )
-
 def main():
+    """main method"""
     agent.regist(
-        url = agent.AUTH_URL,
+        host = agent.REST_HOST,
+        port = agent.REST_PORT,
         client_type = agent.CLIENT_TYPE,
         client_id = agent.CLIENT_ID, 
         client_key = agent.CLIENT_KEY, 

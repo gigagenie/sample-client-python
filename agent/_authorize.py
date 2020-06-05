@@ -18,7 +18,7 @@ import hmac
 import datetime
 import uuid
 
-kwargs_list = {'url', 'client_type', 'client_id', 'client_key', 'client_secret'}
+kwargs_list = {'host', 'port', 'client_type', 'client_id', 'client_key', 'client_secret'}
 def chk_kwargs(**kwargs):
     """Check `kwargs` has all nessesary keywards
 
@@ -30,6 +30,10 @@ def chk_kwargs(**kwargs):
     if set(kwargs_list) != set(inter):
         raise Exception("Enter proper kwargs. (%s)", kwargs)
 
+
+def auth_url(host, port):
+    return "{}:{}/v2/authorize".format(host, port)
+
 # /v2/authorize 
 def authorize(**kwargs):
     """Authorize client data with post
@@ -37,7 +41,7 @@ def authorize(**kwargs):
     Parameters
     ----------
     **kwargs: obj
-        It must include url, client_type, client_id, client_key, client_secret.
+        It must include post, port, client_type, client_id, client_key, client_secret.
         The ostype and pkgname are optional parameter.
 
     Return
@@ -65,7 +69,7 @@ def authorize(**kwargs):
         'pkgname':      kwargs.get("pkgname", "")
     }
     
-    r = requests.post(kwargs["url"], headers=headers, data=payload)
+    r = requests.post(auth_url(kwargs["host"], kwargs["port"]), headers=headers, data=payload)
 
     res_json = r.json()
     return res_json
@@ -77,7 +81,7 @@ def check_authorize(**kwargs):
     Paramters
     ---------
     **kwargs: obj
-        It must include `url`, `client_uuid`, `client_id`, `client_key`, `client_secret`, `client_type`.
+        It must include `host`, `port`, `client_uuid`, `client_id`, `client_key`, `client_secret`, `client_type`.
 
     Return
     ------
@@ -85,7 +89,7 @@ def check_authorize(**kwargs):
         Return code and return message.
     """
     chk_kwargs(**kwargs)
-    url = "{}/{}".format(kwargs["url"], kwargs["client_uuid"])
+    url = "{}/{}".format(auth_url(kwargs["host"], kwargs["port"]), kwargs["client_uuid"])
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")[:-3]
     message = "{}:{}:{}".format(kwargs["client_id"], kwargs["client_key"], timestamp)
     signature = hmac.new(kwargs["client_secret"].encode(), message.encode(), hashlib.sha256).hexdigest()

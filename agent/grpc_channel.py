@@ -30,7 +30,8 @@ CLIENT_UUID = ''
 HOST = config.get('grpc', 'host')
 PORT = int(config.get('grpc', 'port'))
 
-AUTH_URL = config.get('auth', 'url')
+REST_HOST = config.get('rest', 'host')
+REST_PORT = config.get('rest', 'port')
 PKGNAME = ''
 
 logger = logging.getLogger()

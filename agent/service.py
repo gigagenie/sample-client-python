@@ -20,6 +20,7 @@ from __future__ import absolute_import
 # gRPC
 import grpc
 from proto import gigagenieM_pb2
+import agent
 import agent.grpc_channel as grpc_channel
 from agent._player import *
 from agent._audio import *
@@ -303,7 +304,8 @@ def grpc_request():
     
     logger.info("START: grpc_request()")
     stub = grpc_channel.grpc_conn()
-    requests = stub.serviceM(_generate_request())
+    metadata = (('x-client-version', 'python-client/%s' % agent.__version__), )
+    requests = stub.serviceM(_generate_request(), metadata = metadata)
 
     for responses in requests:
         """
