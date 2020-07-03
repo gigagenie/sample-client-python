@@ -348,6 +348,8 @@ def grpc_request():
                 dss_state_update(mPayloadJson['cmdOpt'])
             elif mType == 'Snd_SVEV':
                 doServerCommand_Snd_SVEV(mPayloadJson)
+            elif mType == "Req_OAuth":
+                print('OAuth url: {}'.format(mPayloadJson["cmdOpt"]["oauth_url"]))
         elif responses.HasField("voice"): # Response of voice
             if ttsplayStatus == 1:
                 ttsplayStatus = 2
