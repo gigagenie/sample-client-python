@@ -10,8 +10,7 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-# limitations under the License.
-
+# limitations under the License.  
 import requests
 import hashlib
 import hmac
@@ -60,6 +59,40 @@ def logout(**kwargs):
     }
     
     r = requests.delete(
+        url=service_url(kwargs["host"], kwargs["port"], kwargs["service_type"], kwargs["client_uuid"]),
+        headers=headers,
+        data=payload
+    )
+
+    res_json = r.json()
+    print(res_json)
+
+def login(**kwargs):
+    """Logout 3rd party service
+
+    Parameters
+    ----------
+    **kwargs: obj
+
+    Return
+    ------
+    res_json: :obj:`json`
+        uuid response requested with `**kwargs`.
+    """
+    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S%f")[:-3]
+    message = kwargs["client_id"] + ':' + kwargs["client_key"] + ':' + timestamp
+    signature = hmac.new(kwargs["client_secret"].encode(), message.encode(), hashlib.sha256).hexdigest()
+    headers = {
+        'x-auth-clienttype': kwargs["client_type"],
+        'x-auth-timestamp': timestamp, 
+        'x-auth-signature': signature
+    }
+    
+    payload = {
+        'login_type':   kwargs["login_type"]
+    }
+    
+    r = requests.post(
         url=service_url(kwargs["host"], kwargs["port"], kwargs["service_type"], kwargs["client_uuid"]),
         headers=headers,
         data=payload
