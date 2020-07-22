@@ -63,7 +63,7 @@ def authorize(**kwargs):
         'client_key':   kwargs["client_key"],
         'timestamp':    timestamp,
         'signature':    signature,
-        'userid':       kwargs["client_id"],
+        'userid':       client_userid,
         'devicemodel':  'python',
         'ostype':       kwargs.get("ostype", ""),
         'pkgname':      kwargs.get("pkgname", "")
