@@ -60,8 +60,6 @@ def mic_on():
     global sendVoiceFlag
     sendVoiceFlag = True
     gen_event.set()
-    t = threading.Timer(5.0, mic_off_ready)
-    t.start()
 
 
 # -------------- media ------------ #
@@ -248,6 +246,7 @@ def _generate_request():
                     if sendVoiceFlag is False:
                         gen_event.clear()
                         break
+            mic_off_ready()
             logger.info("END of send voice")
         else: # command handling
             message.devCommand.msgType = g_msgType
