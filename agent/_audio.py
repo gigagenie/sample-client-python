@@ -24,10 +24,11 @@ import wave
 import os
 
 # Config for Audio
+# The "RATE" have to be 16000 and the "CHUNK" have to be multiple of 320 to fit KT's Voice recognition server
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 16000
-CHUNK = 512
+CHUNK = 640
 
 # MicrophoneStream - original code in https://goo.gl/7Xy3TT
 class MicrophoneStream(object):
