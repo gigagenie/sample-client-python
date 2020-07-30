@@ -43,6 +43,11 @@ class MicrophoneStream(object):
 
     def __enter__(self):
         self._audio_interface = pyaudio.PyAudio()
+        try:
+            self._audio_interface.get_default_input_device_info()
+        except:
+            raise
+
         self._audio_stream = self._audio_interface.open(
             format=pyaudio.paInt16,
             channels=1, rate=self._rate,

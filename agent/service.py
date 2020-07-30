@@ -237,15 +237,18 @@ def _generate_request():
         gen_event.wait()
         if sendVoiceFlag is True: # mic on
             logger.info("START of send voice")
-            with MicrophoneStream(RATE, CHUNK) as stream:
-                audio_generator = stream.generator()
-                print('mic on')
-                for content in audio_generator:
-                    message.voice = content
-                    yield message
-                    if sendVoiceFlag is False:
-                        gen_event.clear()
-                        break
+            try:
+                with MicrophoneStream(RATE, CHUNK) as stream:
+                    audio_generator = stream.generator()
+                    print('mic on')
+                    for content in audio_generator:
+                        message.voice = content
+                        yield message
+                        if sendVoiceFlag is False:
+                            gen_event.clear()
+                            break
+            except:
+               print ("ERROR: No Audio Input Device Available")
             mic_off_ready()
             logger.info("END of send voice")
         else: # command handling
