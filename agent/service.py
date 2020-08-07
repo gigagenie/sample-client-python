@@ -48,6 +48,19 @@ g_msgPayload = ''
 dev_dssStatus = {'SU:016', 'SU:027', 'SI:002', 'SG:000'} # initial status: laucher main, hdmi connected, remote voice input, nobody here
 sendVoiceFlag = False
 
+# for display in run_curses.py
+g_stt_text = ''
+g_tts_text = ''
+meta_info = None
+def get_sendVoiceFlag():
+	return sendVoiceFlag
+def get_g_stt_text():
+	return g_stt_text
+def get_g_tts_text():
+	return g_tts_text
+def get_meta_info():
+	return meta_info
+
 
 def mic_off_ready():
     global sendVoiceFlag
@@ -124,6 +137,8 @@ def processMediaPlay(msgPayloadJson):
         Json data from grpc response.
     """
     global ttsplayStatus
+    global g_tts_text
+    global meta_info
 
     playOptions = msgPayloadJson['cmdOpt']
     dss_state_update(playOptions)
@@ -134,6 +149,7 @@ def processMediaPlay(msgPayloadJson):
         tts_text = meta_info.get('mesg', '')
         logger.info('TTS_TEXT: %s' % tts_text)
         print('TTS_TEXT: %s' % tts_text)
+        g_tts_text = tts_text
     if playUrl == None:  # media(tts) type is audio data(wave)
         change_media_process(playOptions['actOnOther'])
         logger.info('ACTION >>> TTS Play')
@@ -304,6 +320,7 @@ def grpc_request():
     """
     global sendVoiceFlag
     global ttsplayStatus
+    global g_stt_text
     
     logger.info("START: grpc_request()")
     stub = grpc_channel.grpc_conn()
@@ -341,6 +358,7 @@ def grpc_request():
                 logger.info('STT_TEXT: %s' % stt_text)
                 print('STT_TEXT: %s' % stt_text)
                 processNextCmd(mPayloadJson)
+                g_stt_text = stt_text
             elif mType == 'Req_PLMD':
                 processMediaPlay(mPayloadJson)
             elif mType == 'Req_UPMD':
