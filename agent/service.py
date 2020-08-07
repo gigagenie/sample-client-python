@@ -262,6 +262,7 @@ def _generate_request():
             logger.debug(g_msgType + ' : ' + message.devCommand.msgPayload)
             yield message
             gen_event.clear()
+            ready_event.set()
 # ---------------------------------- #
 
 
