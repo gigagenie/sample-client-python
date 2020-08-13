@@ -26,7 +26,8 @@ Sample Client에 구현되어있는 기능은 다음과 같습니다.
 * README.md: this file
 * agent.config: 본 배포판 실행을 위한 서버와 키 정보(키 발급 후 수정 필요)
 * requirements.txt: 본 배포판에서 사용되는 Python 라이브러리
-* **run_enter.py**: 본 배포판을 실행하는 메인 파일으로, agent/regist.py와 agent/service.py를 호출
+* **run_enter.py**: 본 배포판을 CLI로 실행하는 파일
+* **run_curses.py**: 본 배포판을 텍스트 모드 디스플레이 형태로 실행하는 파일
 * proto/: grpc proto 파일
 * agent/: Client 구현을 위해 필요한 라이브러리 및 모듈
     * _audio.py: 마이크 기능 및 pyaudio 라이브러리를 이용한 오디오 출력 모듈
@@ -82,6 +83,12 @@ Sample Client에 구현되어있는 기능은 다음과 같습니다.
 
 ## 4. 실행 !!!
     $ python run_enter.py
+    
+   or
+   
+    $ python run_curses.py
+
+    
 
 ## 5. 로그 확인
     $ tail -f run.log
