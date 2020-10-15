@@ -159,19 +159,14 @@ def draw_screen(stdscr):
         if infoDetail is not None:
             stdscr.attron(curses.color_pair(4))
 
-            try:
-                title = infoDetail['title']
-            except:
-                title = ''
-            try:
-                artist = infoDetail['artist']
-            except:
-                artist = ''
+            title = infoDetail['title'] if 'title' in infoDetail else ''
+            artist = infoDetail['artist'] if 'artist' in infoDetail else ''
+            albumName = infoDetail['albumName'] if 'albumName' in infoDetail else ''
 
             m_info1 = "{}".format(title)[:width-1]
             stdscr.addstr(start_y + 7, 0, 'Now playing: ' + m_info1)
             if artist != '':
-                m_info2 = "{}".format(artist)[:width-1]
+                m_info2 = "{} / {}".format(artist, albumName)[:width-1]
                 stdscr.addstr(start_y + 8, 13, m_info2)
 
             stdscr.attroff(curses.color_pair(4))
