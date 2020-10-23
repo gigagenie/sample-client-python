@@ -64,9 +64,7 @@ def authorize(**kwargs):
         'timestamp':    timestamp,
         'signature':    signature,
         'userid':       client_userid,
-        'devicemodel':  'python',
-        'ostype':       kwargs.get("ostype", ""),
-        'pkgname':      kwargs.get("pkgname", "")
+        'devicemodel':  'python'
     }
     
     r = requests.post(auth_url(kwargs["host"], kwargs["port"]), headers=headers, data=payload)
