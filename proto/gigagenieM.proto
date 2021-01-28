@@ -7,20 +7,29 @@ message reqM{
 	oneof mRequest{
 		bytes voice=1;
 		typeCommand devCommand=2;
+		typeVoiceExt voiceExt=3;
 	}
 }
+
+message typeVoiceExt{
+	bytes voice=1;
+	bool noMoreData=2;
+}
+
 message resM{
 	oneof mResponse{
 		bytes voice=1;
 		typeCommand srvCommand=2;
-        voiceStream stream=3;
+    voiceStream stream=3;
 	}
 }
+
 message voiceStream{
-    int32 end=1;
+  int32 end=1;
 	bytes voice=2;
 	int32 channel=3;
-} 
+}
+
 message typeCommand{
 	string msgType=1;
 	string msgPayload=2;

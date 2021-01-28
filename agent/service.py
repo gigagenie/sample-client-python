@@ -29,6 +29,9 @@ import json
 import logging
 import threading
 
+import io   # Used for PCM File Reading
+import os   # Used for PCM File Reading
+
 logger = logging.getLogger()
 ttsplayer = WavePlayer()
 mediaplayer = VlcMediaPlayer()
@@ -263,6 +266,25 @@ def _generate_request():
                         if sendVoiceFlag is False:
                             gen_event.clear()
                             break
+
+                """Check below code for audio file input (need to comment out above)
+                
+                remaining = os.stat("audio.pcm").st_size
+                with io.open("audio.pcm", "rb") as audio_file:      
+                    while True:
+                        chunk = audio_file.read(CHUNK)
+                        remaining -= len(chunk)
+                        if not chunk:
+                            mic_off_ready()
+                            break
+                    
+                        message.voiceExt.voice = chunk
+                        if remaining == 0:
+                            message.voiceExt.noMoreData = True
+                        yield message
+
+                    audio_file.close()
+                """
             except:
                print ("ERROR: No Audio Input Device Available")
             mic_off_ready()
