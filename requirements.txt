@@ -1,4 +1,4 @@
-grpcio==1.27.2
+grpcio==1.53.0
 grpcio-tools==1.27.2
 PyAudio==0.2.11
 python-vlc==3.0.7110
